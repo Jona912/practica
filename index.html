@@ -1,29 +1,127 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Home Banking Simulado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: rgb(240, 236, 236);
+      margin: 0;
+      padding: 0;
+      background-image: url(imagenes/oceano-2.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+      
+
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    #dashboard {
+      display: none;
+    }
+
+    .info {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e1f5fe;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1> Vamos River</h1>
-    </header>
-    <main>
-       <ul>
-        <li>
-            Inicio
-        </li>
-       </ul>
 
-    </main>
-<footer>
-    <h3>nos vemos</h3>
+<div class="container">
+  <div id="login">
+    <h2>Login</h2>
+    <input type="text" id="user" placeholder="Usuario">
+    <input type="password" id="pass" placeholder="Contraseña">
+    <button onclick="login()">Ingresar</button>
+    <p id="error" style="color: red;"></p>
+  </div>
 
+  <div id="dashboard">
+    <h2>Bienvenido, <span id="usernameDisplay"></span></h2>
+    <div class="info">Saldo actual: $<span id="balance">10000</span></div>
 
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos a minus cumque eos voluptas amet, neque alias tenetur magni velit doloremque ipsam officia inventore veritatis voluptatum fuga quas molestiae laboriosam.
-    </p>
-</footer>    
+    <h3>Transferir dinero</h3>
+    <input type="text" id="destino" placeholder="Cuenta destino">
+    <input type="number" id="monto" placeholder="Monto">
+    <button onclick="transferir()">Transferir</button>
+    <p id="transferMsg" style="color: green;"></p>
+
+    <button style="margin-top: 20px; background-color: #ccc;" onclick="logout()">Cerrar sesión</button>
+  </div>
+</div>
+
+<script>
+  let saldo = 10000;
+
+  function login() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+
+    if (user === "cliente" && pass === "1234") {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('usernameDisplay').innerText = user;
+    } else {
+      document.getElementById('error').innerText = "Usuario o contraseña incorrectos";
+    }
+  }
+
+  function transferir() {
+    const destino = document.getElementById('destino').value;
+    const monto = parseFloat(document.getElementById('monto').value);
+
+    if (!destino || isNaN(monto) || monto <= 0) {
+      document.getElementById('transferMsg').style.color = 'red';
+      document.getElementById('transferMsg').innerText = "Ingrese datos válidos.";
+      return;
+    }
+
+    if (monto > saldo) {
+      document.getElementById('transferMsg').style.color = 'red';
+      document.getElementById('transferMsg').innerText = "Saldo insuficiente.";
+      return;
+    }
+
+    saldo -= monto;
+    document.getElementById('balance').innerText = saldo.toFixed(2);
+    document.getElementById('transferMsg').style.color = 'green';
+    document.getElementById('transferMsg').innerText = `Transferencia de $${monto.toFixed(2)} realizada a ${destino}.`;
+    document.getElementById('monto').value = "";
+    document.getElementById('destino').value = "";
+  }
+
+  function logout() {
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login').style.display = 'block';
+    document.getElementById('user').value = "";
+    document.getElementById('pass').value = "";
+    document.getElementById('error').innerText = "";
+    document.getElementById('transferMsg').innerText = "";
+  }
+</script>
+
 </body>
 </html>
